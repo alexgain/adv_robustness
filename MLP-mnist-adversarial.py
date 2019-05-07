@@ -24,9 +24,9 @@ cuda_boole = torch.cuda.is_available()
 ### Data import and preprocessing ###
 ###                               ###
 
-N = 10000
+N = 60000
 BS = 128
-rbf_boole = True
+rbf_boole = False
 
 N2 = 200
 
@@ -248,7 +248,7 @@ def CO_calc(model,x,y):
 ###          ###
 
 #Some more hyper-params and initializations:
-epochs = 2000
+epochs = 10
 
 ##train_loader = torch.utils.data.DataLoader(train, batch_size=BS, shuffle=True)
 ##test_loader = torch.utils.data.DataLoader(test, batch_size=BS, shuffle=False)
@@ -454,3 +454,5 @@ for epoch in range(epochs):
 
 t2 = time()
 print((t2 - t1)/60,'total minutes elapsed')
+
+torch.save(my_net.state_dict(),'teacher.state')
