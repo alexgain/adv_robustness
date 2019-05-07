@@ -174,7 +174,7 @@ if cuda_boole:
 ### Loss and optimization ###
 ###                       ###
 
-LR = 0.0005
+LR = 0.00005
 LR2 = 1.0
 ##loss_metric = nn.MSELoss()
 loss_metric = nn.CrossEntropyLoss()
