@@ -26,7 +26,8 @@ cuda_boole = torch.cuda.is_available()
 
 N = 60000
 BS = 128
-rbf_boole = False
+rbf_boole = True
+ST = True
 
 N2 = 200
 
@@ -99,7 +100,7 @@ def rbf(x,beta,mu):
 
 
 class Net(nn.Module):
-    def __init__(self, input_size, width, num_classes):
+    def __init__(self, input_size, width, num_classes,rbf_boole=True):
         super(Net, self).__init__()
 
         ##feedfoward layers:
@@ -131,11 +132,13 @@ class Net(nn.Module):
         self.mu3 = nn.Parameter(torch.randn(1,width,width))
         self.mu4 = nn.Parameter(torch.randn(1,width,width))
         self.mu5 = nn.Parameter(torch.randn(1,width,width))
+        
+        self.rbf_boole=rbf_boole
 
         
     def forward(self, input_data):
 
-        if not rbf_boole:
+        if not self.rbf_boole:
             out = self.relu(self.ff1(input_data)) #input
             out = self.relu(self.ff2(out)) #hidden layers
             out = self.relu(self.ff3(out))
@@ -162,7 +165,7 @@ width = 500
 num_classes = 10
 
 ###defining network:        
-my_net = Net(input_size, width, num_classes)
+my_net = Net(input_size, width, num_classes,rbf_boole=rbf_boole)
 if cuda_boole:
     my_net = my_net.cuda()
 
@@ -350,6 +353,10 @@ def bap_val_test(verbose = 1):
 ##if cuda_boole:
 ##    entropy_test = entropy_test.cuda()
 ##entropy_test = Variable(entropy_test)
+    
+if ST:
+    my_net_teacher = Net(input_size, width, num_classes,rbf_boole=False)
+    my_net_teacher.load_state_dict(torch.load('./teacher.state'))
 
 train_acc()
 test_acc()
@@ -398,6 +405,10 @@ for epoch in range(epochs):
 
         ###regular BP gradient update:
         optimizer.zero_grad()
+        if ST:
+            y = torch.Tensor(my_net_teacher.forward(x).cpu().data.numpy())
+            if cuda_boole:
+                y = y.cuda()
         outputs = my_net.forward(x)
         loss = loss_metric(outputs,y)
 ##        if bap_train_boole:
@@ -455,4 +466,4 @@ for epoch in range(epochs):
 t2 = time()
 print((t2 - t1)/60,'total minutes elapsed')
 
-torch.save(my_net.state_dict(),'teacher.state')
+# torch.save(my_net.state_dict(),'teacher.state')
