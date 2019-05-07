@@ -24,8 +24,9 @@ cuda_boole = torch.cuda.is_available()
 ### Data import and preprocessing ###
 ###                               ###
 
-N = 60000
+N = 128
 BS = 128
+rbf_boole = True
 
 N2 = 200
 
@@ -93,6 +94,10 @@ def to_categorical(y, num_classes):
 ### Define torch network ###
 ###                      ###
 
+def rbf(x,beta,mu):
+    return torch.exp(-beta*(x.view(x.shape[0],-1,1)-mu).norm(dim=2))
+
+
 class Net(nn.Module):
     def __init__(self, input_size, width, num_classes):
         super(Net, self).__init__()
@@ -116,91 +121,44 @@ class Net(nn.Module):
         self.relu = nn.ReLU()
         self.sm = nn.Softmax()
 
+        self.beta1 = nn.Parameter(torch.Tensor([0.01]))
+        self.beta2 = nn.Parameter(torch.Tensor([0.01]))
+        self.beta3 = nn.Parameter(torch.Tensor([0.01]))
+        self.beta4 = nn.Parameter(torch.Tensor([0.01]))
+        self.beta5 = nn.Parameter(torch.Tensor([0.01]))
+        self.mu1 = nn.Parameter(torch.randn(1,width,width))
+        self.mu2 = nn.Parameter(torch.randn(1,width,width))
+        self.mu3 = nn.Parameter(torch.randn(1,width,width))
+        self.mu4 = nn.Parameter(torch.randn(1,width,width))
+        self.mu5 = nn.Parameter(torch.randn(1,width,width))
+
         
     def forward(self, input_data):
 
-        ##forward pass computation:
-        
-        out = self.relu(self.ff1(input_data)) #input
+        if not rbf_boole:
+            out = self.relu(self.ff1(input_data)) #input
+            out = self.relu(self.ff2(out)) #hidden layers
+            out = self.relu(self.ff3(out))
+            out = self.relu(self.ff4(out))
+            out = self.relu(self.ff5(out))
 
-        out = self.relu(self.ff2(out)) #hidden layers
-##        out = self.do(out)
-        out = self.relu(self.ff3(out))
-##        out = self.do(out)
-        out = self.relu(self.ff4(out))
-        out = self.relu(self.ff5(out))
+        else:
+            out = rbf(self.ff1(input_data),self.beta1,self.mu1) #input
+            out = rbf(self.ff2(out),self.beta2,self.mu2) #hidden layers
+            out = rbf(self.ff3(out),self.beta3,self.mu3)
+            out = rbf(self.ff4(out),self.beta4,self.mu4)
+            out = rbf(self.ff5(out),self.beta5,self.mu5)
 
-        out = self.ff_out(out)
-##        out = self.sm(self.ff_out(out))
-##        out = F.log_softmax(self.ff_out(out), dim=1)
-
-        return out #returns class probabilities for each image
-
-    def beta(self, x):
-
-        acts = []
-        
-        out = self.ff1(x) #input
-        acts.append(out.mean(dim=1))
-        out = self.relu(out)
-
-        out = self.ff2(out)
-        acts.append(out.mean(dim=1))
-        out = self.relu(out)
-
-        out = self.ff3(out)
-        acts.append(out.mean(dim=1))
-        out = self.relu(out)
-
-        out = self.ff4(out)
-        acts.append(out.mean(dim=1))
-        out = self.relu(out)
-
-        out = self.ff5(out)
-        acts.append(out.mean(dim=1))
-        out = self.relu(out)
 
         out = self.ff_out(out)
-        out = self.sm(out)
-        acts.append(out.mean(dim=1))
-        
 
-    ##        out = self.relu(self.ff5(out))
-    ##        acts.append(out.mean(dim=1))
-    ##        out = self.relu(self.ff_out(out))
-    ##        acts.append(out.mean(dim=1))
+        return out 
 
-        #calculating beta:
-        def threshold(M):
-            Mabs = np.abs(M)
-            M[Mabs<0.0000001] = 0
-            return M
-        
-        C = np.array([np.ones(len(acts)),np.arange(1,len(acts)+1)]).transpose()
-        Cf = np.linalg.inv((C.T).dot(C)).dot(C.T)
-        Cf = threshold(Cf)
-        Cf = Cf[1,:]
-
-        S = 0
-        for j in range(len(Cf)):
-            S += acts[j]*Cf[j]
-        
-        return S
-
-    def corr(self, input_data, entropy):
-        slopes = self.beta(input_data)
-        vx = slopes - slopes.mean()
-        vy = entropy - entropy.mean()
-
-        num = torch.sum(vx * vy)
-        den = torch.sqrt(torch.sum(vx**2) * torch.sum(vy**2))
-
-        return num / den
 
 
 ###hyper-parameters:
 input_size = 28*28
-width = 500
+width = 10
 num_classes = 10
 
 ###defining network:        
@@ -213,7 +171,7 @@ if cuda_boole:
 ### Loss and optimization ###
 ###                       ###
 
-LR = 0.01
+LR = 0.005
 LR2 = 1.0
 ##loss_metric = nn.MSELoss()
 loss_metric = nn.CrossEntropyLoss()
@@ -496,5 +454,3 @@ for epoch in range(epochs):
 
 t2 = time()
 print((t2 - t1)/60,'total minutes elapsed')
-             
-
