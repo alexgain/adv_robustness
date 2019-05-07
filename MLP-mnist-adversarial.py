@@ -357,6 +357,8 @@ def bap_val_test(verbose = 1):
 if ST:
     my_net_teacher = Net(input_size, width, num_classes,rbf_boole=False)
     my_net_teacher.load_state_dict(torch.load('./teacher.state'))
+    if cuda_boole:
+        my_net_teacher = my_net_teacher.cuda()
 
 train_acc()
 test_acc()
