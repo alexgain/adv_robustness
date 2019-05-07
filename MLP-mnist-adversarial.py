@@ -412,7 +412,10 @@ for epoch in range(epochs):
             if cuda_boole:
                 y = y.cuda()
         outputs = my_net.forward(x)
-        loss = loss_metric(outputs,y)
+        if ST:
+            loss = (outputs-y).norm()
+        else:
+            loss = loss_metric(outputs,y)
 ##        if bap_train_boole:
 ##            loss +=  bap_val_test(0)
         loss.backward()
