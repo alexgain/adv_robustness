@@ -36,7 +36,7 @@ transform_data = transforms.ToTensor()
 train_set = datasets.MNIST('./data', train=True, download=True,
                    transform=transform_data)
 
-train_set.train_data = train_set.train_data[:N]
+# train_set.train_data = train_set.train_data[:N]
 
 ##adding noise:
 ##noise_level = 0
