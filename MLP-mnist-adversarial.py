@@ -24,7 +24,7 @@ cuda_boole = torch.cuda.is_available()
 ### Data import and preprocessing ###
 ###                               ###
 
-N = 60000
+N = 5000
 BS = 128
 rbf_boole = True
 ST = True
@@ -251,7 +251,7 @@ def CO_calc(model,x,y):
 ###          ###
 
 #Some more hyper-params and initializations:
-epochs = 10
+epochs = 1000
 
 ##train_loader = torch.utils.data.DataLoader(train, batch_size=BS, shuffle=True)
 ##test_loader = torch.utils.data.DataLoader(test, batch_size=BS, shuffle=False)
