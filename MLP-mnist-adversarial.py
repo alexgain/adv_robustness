@@ -158,7 +158,7 @@ class Net(nn.Module):
 
 ###hyper-parameters:
 input_size = 28*28
-width = 100
+width = 500
 num_classes = 10
 
 ###defining network:        
