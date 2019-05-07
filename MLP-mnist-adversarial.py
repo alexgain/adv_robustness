@@ -26,8 +26,9 @@ cuda_boole = torch.cuda.is_available()
 
 N = 60000
 BS = 128
-rbf_boole = True
-ST = True
+rbf_boole = False
+ST = False
+save = True
 
 N2 = 200
 
@@ -471,4 +472,5 @@ for epoch in range(epochs):
 t2 = time()
 print((t2 - t1)/60,'total minutes elapsed')
 
-# torch.save(my_net.state_dict(),'teacher.state')
+if save == True:
+    torch.save(my_net.state_dict(),'teacher.state')
