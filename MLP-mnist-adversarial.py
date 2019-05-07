@@ -24,7 +24,7 @@ cuda_boole = torch.cuda.is_available()
 ### Data import and preprocessing ###
 ###                               ###
 
-N = 128
+N = 10000
 BS = 128
 rbf_boole = True
 
@@ -158,7 +158,7 @@ class Net(nn.Module):
 
 ###hyper-parameters:
 input_size = 28*28
-width = 10
+width = 100
 num_classes = 10
 
 ###defining network:        
