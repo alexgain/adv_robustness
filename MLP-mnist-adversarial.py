@@ -24,7 +24,7 @@ cuda_boole = torch.cuda.is_available()
 ### Data import and preprocessing ###
 ###                               ###
 
-N = 5000
+N = 60000
 BS = 128
 rbf_boole = True
 ST = True
@@ -413,7 +413,7 @@ for epoch in range(epochs):
                 y = y.cuda()
         outputs = my_net.forward(x)
         if ST:
-            loss = (outputs-y).norm()
+            loss = (outputs-y).norm()/outputs.shape[0]
         else:
             loss = loss_metric(outputs,y)
 ##        if bap_train_boole:
