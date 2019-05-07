@@ -26,7 +26,7 @@ cuda_boole = torch.cuda.is_available()
 
 N = 60000
 BS = 128
-rbf_boole = False
+rbf_boole = True
 ST = True
 
 N2 = 200
