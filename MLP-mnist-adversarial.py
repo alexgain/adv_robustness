@@ -27,7 +27,7 @@ cuda_boole = torch.cuda.is_available()
 N = 60000
 BS = 128
 rbf_boole = True
-ST = True
+ST = False
 save = False
 
 N2 = 200
@@ -441,7 +441,7 @@ for epoch in range(epochs):
         # loss2.backward(retain_graph = True)
                 
         ##performing update:
-        optimizer.step()
+        # optimizer.step()
 
         ##accumulating loss:
         # state_distance += float(loss.cpu().data.numpy())
