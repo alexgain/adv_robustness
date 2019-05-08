@@ -32,6 +32,8 @@ save = True
 
 N2 = 200
 epochs = 10
+LR = 0.01
+
 
 transform_data = transforms.ToTensor()
 
@@ -176,7 +178,6 @@ if cuda_boole:
 ### Loss and optimization ###
 ###                       ###
 
-LR = 0.00005
 LR2 = 1.0
 ##loss_metric = nn.MSELoss()
 loss_metric = nn.CrossEntropyLoss()
