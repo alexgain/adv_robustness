@@ -154,8 +154,8 @@ class Net(nn.Module):
             out = rbf(self.ff1(input_data),self.beta1,self.mu1) #input
             out = rbf(self.ff2(out),self.beta2,self.mu2) #hidden layers
             out = rbf(self.ff3(out),self.beta3,self.mu3)
-            out = rbf(self.ff4(out),self.beta4,self.mu4)
-            out = rbf(self.ff5(out),self.beta5,self.mu5)
+            # out = rbf(self.ff4(out),self.beta4,self.mu4)
+            # out = rbf(self.ff5(out),self.beta5,self.mu5)
 
 
         out = self.ff_out(out)
