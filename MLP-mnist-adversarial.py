@@ -33,6 +33,7 @@ save = False
 N2 = 200
 epochs = 2000
 LR = 0.01
+width = 500
 
 
 transform_data = transforms.ToTensor()
@@ -165,7 +166,6 @@ class Net(nn.Module):
 
 ###hyper-parameters:
 input_size = 28*28
-width = 500
 num_classes = 10
 
 ###defining network:        
@@ -182,10 +182,10 @@ LR2 = 1.0
 ##loss_metric = nn.MSELoss()
 loss_metric = nn.CrossEntropyLoss()
 ##loss_metric = torch.nn.NLLLoss()
-optimizer = torch.optim.SGD(my_net.parameters(), lr = LR, momentum = 0.9)
+# optimizer = torch.optim.SGD(my_net.parameters(), lr = LR, momentum = 0.9)
 ##optimizer = torch.optim.RMSprop(my_net.parameters(), lr = 0.00001)
 ##optimizer = torch.optim.RMSprop(my_net.parameters(), lr = 0.00001, momentum = 0.8)
-##optimizer = torch.optim.Adam(my_net.parameters(), lr = LR)
+optimizer = torch.optim.Adam(my_net.parameters(), lr = 0.001)
 
 ###                         ###
 ### Adversarial Attack code ###
