@@ -31,6 +31,7 @@ ST = False
 save = True
 
 N2 = 200
+epochs = 10
 
 transform_data = transforms.ToTensor()
 
@@ -252,7 +253,6 @@ def CO_calc(model,x,y):
 ###          ###
 
 #Some more hyper-params and initializations:
-epochs = 1000
 
 ##train_loader = torch.utils.data.DataLoader(train, batch_size=BS, shuffle=True)
 ##test_loader = torch.utils.data.DataLoader(test, batch_size=BS, shuffle=False)
